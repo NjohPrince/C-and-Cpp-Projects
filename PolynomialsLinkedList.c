@@ -104,7 +104,16 @@ int main(void) {
     create_poly(4, 1, &poly1);
     create_poly(2, 0, &poly1);
     
+    printf("\nFirst Polynomial: ");
     display_poly(poly1);
+    printf("\n");
+    
+    create_poly(1, 3, &poly2);
+    create_poly(1, 1, &poly2);
+    create_poly(2, 0, &poly2);
+    
+    printf("Second Polynomial: ");
+    display_poly(poly2);
     
     poly = (struct Poly_Node*)malloc(sizeof(struct Poly_Node));
  
