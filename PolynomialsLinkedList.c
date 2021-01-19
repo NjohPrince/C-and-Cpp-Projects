@@ -32,6 +32,18 @@ void create_poly(int x, int y, struct Poly_Node** P) {
     }
 }
 
+// Display Polynomial
+void display_poly(struct Poly_Node *P) {
+    while (P->next != NULL) {
+        printf("%dx^%d", P->coef, P->pow);
+        P = P->next;
+        if (P->coef >= 0) {
+            if (P->next != NULL)
+                printf("+");
+        }
+    }
+}
+
 int main(void) {
 	
 	struct Poly_Node *poly1 = NULL;
@@ -39,6 +51,8 @@ int main(void) {
 	create_poly(2, 3, &poly1);
     create_poly(4, 1, &poly1);
     create_poly(2, 0, &poly1);
+    
+    display_poly(poly1);
 	
     return 0;
 }
