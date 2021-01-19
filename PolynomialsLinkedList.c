@@ -96,6 +96,20 @@ void display_poly(struct Poly_Node *P) {
     }
 }
 
+//Evaluation of the Polynomial
+int eval_poly(struct Poly_Node *P)
+{
+	int result = 0, x;
+	printf("Enter the value of x for evaluation of P(x): ");
+	scanf("%d", &x);
+	while(P->next) //Traversing
+	{
+		result += P->coef * pow(x, P->pow);
+		P = P->next;
+	}
+	return result;
+}
+
 int main(void) {
 	
 	struct Poly_Node *poly1 = NULL, *poly2 = NULL, *poly = NULL;
@@ -104,9 +118,11 @@ int main(void) {
     create_poly(4, 1, &poly1);
     create_poly(2, 0, &poly1);
     
-    printf("\nFirst Polynomial: ");
+    printf("First Polynomial: ");
     display_poly(poly1);
     printf("\n");
+    
+    printf("\n\nTesting Evaluate function on first polynomial answer: %d\n\n", eval_poly(poly1));
     
     create_poly(1, 3, &poly2);
     create_poly(1, 1, &poly2);
