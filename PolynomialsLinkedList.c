@@ -96,6 +96,17 @@ void display_poly(struct Poly_Node *P) {
     }
 }
 
+// Display Polynomial's degree
+int degree_poly(struct Poly_Node *P) {
+	int max = 0;
+    while (P->next) {
+        if(P->pow > max)
+        	max = P->pow;
+        P = P->next;
+    }
+    return max;
+}
+
 //Evaluation of the Polynomial
 int eval_poly(struct Poly_Node *P)
 {
@@ -114,15 +125,16 @@ int main(void) {
 	
 	struct Poly_Node *poly1 = NULL, *poly2 = NULL, *poly = NULL;
 	
-	create_poly(2, 3, &poly1);
-    create_poly(4, 1, &poly1);
+	create_poly(2, 1, &poly1);
+    create_poly(4, 3, &poly1);
     create_poly(2, 0, &poly1);
     
     printf("First Polynomial: ");
     display_poly(poly1);
     printf("\n");
     
-    printf("\n\nTesting Evaluate function on first polynomial answer: %d\n\n", eval_poly(poly1));
+    printf("\n\nTesting Evaluate function on first polynomial answer: %d\n", eval_poly(poly1));
+    printf("Testing degree function on first polynomial answer: %d\n\n", degree_poly(poly1));
     
     create_poly(1, 3, &poly2);
     create_poly(1, 1, &poly2);
