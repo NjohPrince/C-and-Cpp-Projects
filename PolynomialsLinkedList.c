@@ -105,7 +105,7 @@ struct Poly_Node* multiply_poly(struct Poly_Node* R, struct Poly_Node* P, struct
  
             // Invoke addnode function to create
             // a newnode by passing three parameters
-            Q = addnode(Q, coef, pow);
+            create_poly(coef, pow, &Q);
  
             // move the pointer of 2nd polynomial
             // two get its next term
