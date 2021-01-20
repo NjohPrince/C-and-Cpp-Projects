@@ -77,8 +77,7 @@ void add_poly(struct  Poly_Node* R, struct  Poly_Node* P, struct  Poly_Node* Q) 
             Q->coef = P->coef;
             P = P->next;
         }
-        Q->next
-            = (struct Poly_Node*)malloc(sizeof(struct Poly_Node));
+        Q->next = (struct Poly_Node*)malloc(sizeof(struct Poly_Node));
         Q = Q->next;
         Q->next = NULL;
     }
@@ -117,7 +116,7 @@ void removeDuplicates(struct Poly_Node* start)
     }
 }
 
-struct Poly_Node* multiply_poly(struct Poly_Node* R, struct Poly_Node* P, struct Poly_Node* Q) {
+void multiply_poly(struct Poly_Node* R, struct Poly_Node* P, struct Poly_Node* Q) {
  
     // Create two pointer and store the
     // address of 1st and 2nd polynomials
@@ -126,20 +125,26 @@ struct Poly_Node* multiply_poly(struct Poly_Node* R, struct Poly_Node* P, struct
     ptr2 = P;
     while (ptr1 != NULL) {
         while (ptr2 != NULL) {
-            int coef, pow;
+            int coeff, poww;
  
             // Multiply the coefficient of both
             // polynomials and store it in coeff
-            coef = ptr1->coef * ptr2->coef;
+            coeff = ptr1->coef * ptr2->coef;
  
             // Add the powerer of both polynomials
             // and store it in power
-            pow = ptr1->pow + ptr2->pow;
+            poww = ptr1->pow + ptr2->pow;
  
             // Invoke addnode function to create
             // a newnode by passing three parameters
-            create_poly(coef, pow, &Q);
+            Q->pow = poww;
+            Q->coef = coeff;
  
+ 			// Dynamically create new node
+	        Q->next = (struct Poly_Node*)malloc(sizeof(struct Poly_Node));
+	        Q = Q->next;
+	        Q->next = NULL;
+ 			
             // move the pointer of 2nd polynomial
             // two get its next term
             ptr2 = ptr2->next;
@@ -152,7 +157,6 @@ struct Poly_Node* multiply_poly(struct Poly_Node* R, struct Poly_Node* P, struct
         // move the pointer of 1st polynomial
         ptr1 = ptr1->next;
     }
-    return Q;
 }
 
 // Display Polynomial
@@ -194,7 +198,7 @@ int eval_poly(struct Poly_Node *P)
 
 int main(void) {
 	
-	struct Poly_Node *poly1 = NULL, *poly2 = NULL, *poly = NULL;
+	struct Poly_Node *poly1 = NULL, *poly2 = NULL, *poly = NULL, *multPoly = NULL;
 	
 	create_poly(2, 1, &poly1);
     create_poly(4, 3, &poly1);
@@ -220,7 +224,10 @@ int main(void) {
  
     printf("\n\nSum of the two Polynomial: ");
     display_poly(poly);
-	
+    
+	printf("\n\nProduct of the two Polynomial: ");
+    multiply_poly(poly1, poly2, multPoly);
+    display_poly(multPoly);
 	
     return 0;
 }
