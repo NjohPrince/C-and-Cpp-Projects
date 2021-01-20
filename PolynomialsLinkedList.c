@@ -84,6 +84,39 @@ void add_poly(struct  Poly_Node* R, struct  Poly_Node* P, struct  Poly_Node* Q) 
     }
 }
 
+// Function to add coefficients of
+// two elements having same powerer
+void removeDuplicates(struct Poly_Node* start)
+{
+    struct Poly_Node *ptr1, *ptr2, *dup;
+    ptr1 = start;
+ 
+    /* Pick elements one by one */
+    while (ptr1 != NULL && ptr1->next != NULL) {
+        ptr2 = ptr1;
+ 
+        // Compare the picked element
+        // with rest of the elements
+        while (ptr2->next != NULL) {
+ 
+            // If powerer of two elements are same
+            if (ptr1->pow == ptr2->next->pow) {
+ 
+                // Add their coefficients and put it in 1st element
+                ptr1->coef = ptr1->coef + ptr2->next->coef;
+                dup = ptr2->next;
+                ptr2->next = ptr2->next->next;
+ 
+                // remove the 2nd element
+                free(dup);
+            }
+            else
+                ptr2 = ptr2->next;
+        }
+        ptr1 = ptr1->next;
+    }
+}
+
 struct Poly_Node* multiply_poly(struct Poly_Node* R, struct Poly_Node* P, struct Poly_Node* Q) {
  
     // Create two pointer and store the
