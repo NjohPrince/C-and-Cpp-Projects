@@ -84,6 +84,44 @@ void add_poly(struct  Poly_Node* R, struct  Poly_Node* P, struct  Poly_Node* Q) 
     }
 }
 
+struct Poly_Node* multiply_poly(struct Poly_Node* R, struct Poly_Node* P, struct Poly_Node* Q) {
+ 
+    // Create two pointer and store the
+    // address of 1st and 2nd polynomials
+    struct Poly_Node *ptr1, *ptr2;
+    ptr1 = R;
+    ptr2 = P;
+    while (ptr1 != NULL) {
+        while (ptr2 != NULL) {
+            int coef, pow;
+ 
+            // Multiply the coefficient of both
+            // polynomials and store it in coeff
+            coef = ptr1->coef * ptr2->coef;
+ 
+            // Add the powerer of both polynomials
+            // and store it in power
+            pow = ptr1->pow + ptr2->pow;
+ 
+            // Invoke addnode function to create
+            // a newnode by passing three parameters
+            Q = addnode(Q, coef, pow);
+ 
+            // move the pointer of 2nd polynomial
+            // two get its next term
+            ptr2 = ptr2->next;
+        }
+ 
+        // Move the 2nd pointer to the
+        // starting point of 2nd polynomial
+        ptr2 = P;
+ 
+        // move the pointer of 1st polynomial
+        ptr1 = ptr1->next;
+    }
+    return Q;
+}
+
 // Display Polynomial
 void display_poly(struct Poly_Node *P) {
     while (P->next != NULL) {
