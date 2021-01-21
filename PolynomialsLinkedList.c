@@ -113,12 +113,16 @@ int eval_poly(struct Poly_Node *P, int val)
 
 // Display polynomial
 void display_poly(struct Poly_Node *P) {
-    while(P != NULL) {
-        printf("%dx^%d", P->coef, P->pow);
-        P = P->next;
-        if(P != NULL)
-            printf(" + ");
-    }
+	if(P == NULL){
+		printf("has no terms yet\n");
+	}else{
+	    while(P != NULL) {
+	        printf("%dx^%d", P->coef, P->pow);
+	        P = P->next;
+	        if(P != NULL)
+	            printf(" + ");
+	    }
+	}
 }
 
 // Display Polynomial's degree
@@ -185,21 +189,32 @@ int main(void) {
 				printf("Q(x) is a polynomial of degree: %d\n\n", degree_poly(poly_2));
 				break;
 			case 6:
-				printf("Enter the value of x for evaluation of P(x): ");
-				scanf("%d", &x);
-				printf("After evaluating P(%d), answer is: %d\n", x, eval_poly(poly_1, x));
+				if(poly_1 == NULL){
+					printf("Polynomial P(x) has no terms yet\n\n");
+				}else{
+					printf("Enter the value of x for evaluation of P(x): ");
+					scanf("%d", &x);
+					printf("After evaluating P(%d), answer is: %d\n", x, eval_poly(poly_1, x));
+				}
 				break;
 			case 7:
-				printf("Enter the value of x for evaluation of Q(x): ");
-				scanf("%d", &x);
-				printf("\nAfter evaluating Q(%d), answer is: %d\n", x, eval_poly(poly_2, x));
-				printf("\n");
+				if(poly_2 == NULL){
+					printf("Polynomial Q(x) has no terms yet\n\n");
+				}else{
+					printf("Enter the value of x for evaluation of Q(x): ");
+					scanf("%d", &x);
+					printf("After evaluating Q(%d), answer is: %d\n", x, eval_poly(poly_2, x));
+				}
 				break;
 			case 8:
-				add_poly(&poly_sum, poly_1, poly_2);
-				printf("\nResult of addition of P(x) and Q(x): ");
-				display_poly(poly_sum);
-				printf("\n\n");
+				if(poly_2 == NULL || poly_1 == NULL){
+					printf("Please create polynomials first\n\n");
+				}else{
+					add_poly(&poly_sum, poly_1, poly_2);
+					printf("\nResult of addition of P(x) and Q(x): ");
+					display_poly(poly_sum);
+					printf("\n\n");
+				}
 				break;
 			case 9:
 				break;
