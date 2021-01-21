@@ -1,4 +1,4 @@
-// Library files import
+// Including Library files to be used 
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
@@ -7,227 +7,209 @@
 struct Poly_Node {
     int coef;
     int pow;
-    struct Poly_Node* next;
+    struct Poly_Node *next;
 };
 
-// Function to create new node
-void create_poly(int x, int y, struct Poly_Node** P) {
-    struct Poly_Node *r, *z;
-    z = *P;
-    if (z == NULL) {
-        r = (struct Poly_Node*)malloc(sizeof(struct Poly_Node));
-        r->coef = x;
-        r->pow = y;
-        *P = r;
-        r->next = (struct Poly_Node*)malloc(sizeof(struct Poly_Node));
-        r = r->next;
-        r->next = NULL;
-    }
-    else {
-        r->coef = x;
-        r->pow = y;
-        r->next = (struct Poly_Node*)malloc(sizeof(struct Poly_Node));
-        r = r->next;
-        r->next = NULL;
-    }
+void create_poly(struct Poly_Node **P) {
+    int flag; //A flag to control if the user is done entering terms
+    int coef, pow;
+    struct Poly_Node * tmp_node; //To hold the temporary last address
+    tmp_node = (struct Poly_Node *)malloc(sizeof(struct Poly_Node)); //create the first node
+    *P = tmp_node; //Store the head address to the reference variable
+    do {
+        //Get the coefficient and power
+        printf("\nEnter the coefficient of then term: ");
+        scanf("%d", &coef);
+        tmp_node->coef = coef;
+        printf("Enter the power of the term: ");
+        scanf("%d", &pow);
+        tmp_node->pow = pow;
+ 
+        //Now increase the Linked on user condition
+        tmp_node->next = NULL;
+ 
+        //Ask user for continuation
+        printf("\nAdd another term to the polynomial list?(Yes = 1 / N0 = 0): ");
+        scanf("%d", &flag);
+        
+        //Grow the linked list on condition
+        if(flag) {
+            tmp_node->next = (struct Poly_Node *) malloc(sizeof(struct Poly_Node)); //Grow the list
+            tmp_node = tmp_node->next;
+            tmp_node->next = NULL;
+        }
+    } while (flag);
 }
 
-// Function Adding two polynomial numbers
-void add_poly(struct  Poly_Node* R, struct  Poly_Node* P, struct  Poly_Node* Q) {
-    while (R->next && P->next) {
-        // If power of 1st polynomial is greater then 2nd,
-        // then store 1st as it is and move its pointer
-        if (R->pow > P->pow) {
-            Q->pow = R->pow;
-            Q->coef = R->coef;
-            R = R->next;
-        }
+void add_poly(struct Poly_Node **R, struct Poly_Node *P, struct Poly_Node *Q) {
+    struct Poly_Node * tmp_node; //Temporary storage for the linked list
+    tmp_node = (struct Poly_Node*) malloc(sizeof(struct Poly_Node));
+    tmp_node->next = NULL;
+    *R = tmp_node; //Copy the head address to the result linked list
  
-        // If power of 2nd polynomial is greater then 1st,
-        // then store 2nd as it is and move its pointer
-        else if (R->pow < P->pow) {
-            Q->pow = P->pow;
-            Q->coef = P->coef;
+    //Loop while both of the linked lists have value
+    while(P && Q) {
+        if (P->pow > Q->pow) {
+            tmp_node->pow = P->pow;
+            tmp_node->coef = P->coef;
             P = P->next;
         }
- 
-        // If power of both polynomial numbers is same then
-        // add their coefficients
+        else if (P->pow < Q->pow) {
+            tmp_node->pow = Q->pow;
+            tmp_node->coef = Q->coef;
+            Q = Q->next;
+        }
         else {
-            Q->pow = R->pow;
-            Q->coef = R->coef + P->coef;
-            R = R->next;
+            tmp_node->pow = P->pow;
+            tmp_node->coef = P->coef + Q->coef;
             P = P->next;
+            Q = Q->next;
         }
  
-        // Dynamically create new node
-        Q->next
-            = (struct Poly_Node*)malloc(sizeof(struct Poly_Node));
-        Q = Q->next;
-        Q->next = NULL;
-    }
-    while (R->next || P->next) {
-        if (R->next) {
-            Q->pow = R->pow;
-            Q->coef = R->coef;
-            R = R->next;
+        //Grow the linked list on condition
+        if(P && Q) {
+            tmp_node->next = (struct Poly_Node*) malloc(sizeof(struct Poly_Node));
+            tmp_node = tmp_node->next;
+            tmp_node->next = NULL;
         }
-        if (P->next) {
-            Q->pow = P->pow;
-            Q->coef = P->coef;
+    }
+ 
+    //Loop while either of the linked lists has value
+    while(P || Q) {
+        //We have to create the list at beginning
+        //As the last while loop will not create any unnecessary node
+        tmp_node->next = (struct Poly_Node*) malloc(sizeof(struct Poly_Node));
+        tmp_node = tmp_node->next;
+        tmp_node->next = NULL;
+ 
+        if(P) {
+            tmp_node->pow = P->pow;
+            tmp_node->coef = P->coef;
             P = P->next;
         }
-        Q->next = (struct Poly_Node*)malloc(sizeof(struct Poly_Node));
-        Q = Q->next;
-        Q->next = NULL;
+        if(Q) {
+            tmp_node->pow = Q->pow;
+            tmp_node->coef = Q->coef;
+            Q = Q->next;
+        }
     }
+ 
+    printf("Addition Complete\n");
 }
 
-// Function to add coefficients of
-// two elements having same powerer
-void removeDuplicates(struct Poly_Node* start)
+//Evaluation of the Polynomial
+int eval_poly(struct Poly_Node *P, int val)
 {
-    struct Poly_Node *ptr1, *ptr2, *dup;
-    ptr1 = start;
- 
-    /* Pick elements one by one */
-    while (ptr1 != NULL && ptr1->next != NULL) {
-        ptr2 = ptr1;
- 
-        // Compare the picked element
-        // with rest of the elements
-        while (ptr2->next != NULL) {
- 
-            // If powerer of two elements are same
-            if (ptr1->pow == ptr2->next->pow) {
- 
-                // Add their coefficients and put it in 1st element
-                ptr1->coef = ptr1->coef + ptr2->next->coef;
-                dup = ptr2->next;
-                ptr2->next = ptr2->next->next;
- 
-                // remove the 2nd element
-                free(dup);
-            }
-            else
-                ptr2 = ptr2->next;
-        }
-        ptr1 = ptr1->next;
-    }
+	struct Poly_Node *tmp_node;
+	tmp_node = P;
+	int result = 0;
+	while(tmp_node != NULL) 
+	{
+		result += tmp_node->coef * pow(val, tmp_node->pow);
+		tmp_node = tmp_node->next;
+	}
+	return result;
 }
 
-void multiply_poly(struct Poly_Node* R, struct Poly_Node* P, struct Poly_Node* Q) {
- 
-    // Create two pointer and store the
-    // address of 1st and 2nd polynomials
-    struct Poly_Node *ptr1, *ptr2;
-    ptr1 = R;
-    ptr2 = P;
-    while (ptr1 != NULL) {
-        while (ptr2 != NULL) {
-            int coeff, poww;
- 
-            // Multiply the coefficient of both
-            // polynomials and store it in coeff
-            coeff = ptr1->coef * ptr2->coef;
- 
-            // Add the powerer of both polynomials
-            // and store it in power
-            poww = ptr1->pow + ptr2->pow;
- 
-            // Invoke addnode function to create
-            // a newnode by passing three parameters
-            Q->pow = poww;
-            Q->coef = coeff;
- 
- 			// Dynamically create new node
-	        Q->next = (struct Poly_Node*)malloc(sizeof(struct Poly_Node));
-	        Q = Q->next;
-	        Q->next = NULL;
- 			
-            // move the pointer of 2nd polynomial
-            // two get its next term
-            ptr2 = ptr2->next;
-        }
- 
-        // Move the 2nd pointer to the
-        // starting point of 2nd polynomial
-        ptr2 = P;
- 
-        // move the pointer of 1st polynomial
-        ptr1 = ptr1->next;
-    }
-}
-
-// Display Polynomial
+// Display polynomial
 void display_poly(struct Poly_Node *P) {
-    while (P->next != NULL) {
+    while(P != NULL) {
         printf("%dx^%d", P->coef, P->pow);
         P = P->next;
-        if (P->coef >= 0) {
-            if (P->next != NULL)
-                printf("+");
-        }
+        if(P != NULL)
+            printf(" + ");
     }
 }
 
 // Display Polynomial's degree
 int degree_poly(struct Poly_Node *P) {
+	struct Poly_Node *tmp_node;
+	tmp_node = P;
 	int max = 0;
-    while (P->next) {
-        if(P->pow > max)
-        	max = P->pow;
-        P = P->next;
+    while (tmp_node != NULL) {
+        if(tmp_node->pow > max)
+        	max = tmp_node->pow;
+        tmp_node = tmp_node->next;
     }
     return max;
 }
 
-//Evaluation of the Polynomial
-int eval_poly(struct Poly_Node *P)
-{
-	int result = 0, x;
-	printf("Enter the value of x for evaluation of P(x): ");
-	scanf("%d", &x);
-	while(P->next) //Traversing
-	{
-		result += P->coef * pow(x, P->pow);
-		P = P->next;
-	}
-	return result;
-}
-
+// main function 
 int main(void) {
 	
-	struct Poly_Node *poly1 = NULL, *poly2 = NULL, *poly = NULL, *multPoly = NULL;
+	struct Poly_Node *poly_1 = NULL, *poly_2 = NULL, *poly_sum = NULL, *poly_prod = NULL;
 	
-	create_poly(2, 1, &poly1);
-    create_poly(4, 3, &poly1);
-    create_poly(2, 0, &poly1);
-    
-    printf("First Polynomial: ");
-    display_poly(poly1);
-    printf("\n");
-    
-    printf("\n\nTesting Evaluate function on first polynomial answer: %d\n", eval_poly(poly1));
-    printf("Testing degree function on first polynomial answer: %d\n\n", degree_poly(poly1));
-    
-    create_poly(1, 3, &poly2);
-    create_poly(1, 1, &poly2);
-    create_poly(2, 0, &poly2);
-    
-    printf("Second Polynomial: ");
-    display_poly(poly2);
-    
-    poly = (struct Poly_Node*)malloc(sizeof(struct Poly_Node));
- 
-    add_poly(poly1, poly2, poly);
- 
-    printf("\n\nSum of the two Polynomial: ");
-    display_poly(poly);
-    
-	printf("\n\nProduct of the two Polynomial: ");
-    multiply_poly(poly1, poly2, multPoly);
-    display_poly(multPoly);
+	printf("Polynomials Using A Linked List\n");
+	printf("-------------------------------\n\n");
+	int choice = 1, numOfTerms, i, x;
+	do{
+		printf("1. Create Polynomials P(x) and Q(x)\n");
+		printf("2. Display P(x)\n");
+		printf("3. Display Q(x)\n");
+		printf("4. Display degree of P(x)\n");
+		printf("5. Display degree of Q(x)\n");
+		printf("6. Evaluate P(x) at a certain value of x\n");
+		printf("7. Evaluate Q(x) at a certain value of x\n");
+		printf("8. Add P(x) and Q(x)\n");
+		printf("9. Multiply P(x) and Q(x)\n");
+		printf("0. Terminate Program\n\n");
+		
+		printf("Choose an option: ");
+		scanf("%d", &choice);
+		printf("\n");
+		
+		switch(choice){
+			case 1:
+				printf("Creating P(x)\n");
+				printf("-------------\n");
+			    create_poly(&poly_1);
+			    printf("\nCreating Q(x)\n");
+				printf("-------------\n");
+			    create_poly(&poly_2);
+        		printf("\nDone creating Polynomials\n\n");
+				break;
+			case 2:
+				printf("Polynomial P(x): ");
+				display_poly(poly_1);
+				printf("\n\n");
+				break;
+			case 3:
+				printf("Polynomial Q(x): ");
+				display_poly(poly_2);
+				printf("\n\n");
+				break;
+			case 4:
+				printf("P(x) is a polynomial of degree: %d\n\n", degree_poly(poly_1));
+				break;
+			case 5:
+				printf("Q(x) is a polynomial of degree: %d\n\n", degree_poly(poly_2));
+				break;
+			case 6:
+				printf("Enter the value of x for evaluation of P(x): ");
+				scanf("%d", &x);
+				printf("After evaluating P(%d), answer is: %d\n", x, eval_poly(poly_1, x));
+				break;
+			case 7:
+				printf("Enter the value of x for evaluation of Q(x): ");
+				scanf("%d", &x);
+				printf("\nAfter evaluating Q(%d), answer is: %d\n", x, eval_poly(poly_2, x));
+				printf("\n");
+				break;
+			case 8:
+				add_poly(&poly_sum, poly_1, poly_2);
+				printf("\nResult of addition of P(x) and Q(x): ");
+				display_poly(poly_sum);
+				printf("\n\n");
+				break;
+			case 9:
+				break;
+			case 0:
+				printf("Program Terminated...\n");
+				break;
+			default:
+				printf("Invalid Option... Please kindly select from the available options\n\n");
+		}
+	} while(choice != 0);
 	
     return 0;
 }
