@@ -9,6 +9,20 @@
 
 using namespace std;
 
+void encryptText() {
+	string alphabetsLowerCase = "abcdefghijklmnopqrstuvwxyz";
+	string alphabetsUpperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	string plainText;
+	string cipherText = "";
+	int key, pos = 0;
+	cout << "\nEnter the text: ";
+	cin >> plainText;
+	cout << "Enter the key for encryption: ";
+	cin >> key;
+	
+	
+}
+
 int main(void){
 	int choice = 1;
 	cout << "\t\t\t\tImplmentation of the Ceasar Cipher Algorithm\n";
