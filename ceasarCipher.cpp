@@ -9,6 +9,27 @@
 
 using namespace std;
 
+void decryptCipher() {
+	string alphabetsLowerCase = "abcdefghijklmnopqrstuvwxyz";
+	string alphabetsUpperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	string cipherText;
+	string plainText = "";
+	int key;
+	cout << "\nEnter the text: ";
+	cin >> cipherText;
+	cout << "Enter the key for decrypting: ";
+	cin >> key;
+	
+	for(int i=0; i<cipherText.size(); i++) {
+		if(isupper(cipherText[i])) {
+			plainText += alphabetsUpperCase[((alphabetsUpperCase.find(cipherText[i]) + 26) - key) % 26]; 
+		} else if(islower(cipherText[i])) {
+			plainText += alphabetsLowerCase[((alphabetsLowerCase.find(cipherText[i]) + 26) - key) % 26]; 
+		}
+	}
+	cout <<"\nAfter decrypting " << cipherText  << " corresponding plain text is " << plainText << "\n\n";
+}
+
 void encryptText() {
 	string alphabetsLowerCase = "abcdefghijklmnopqrstuvwxyz";
 	string alphabetsUpperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -19,8 +40,9 @@ void encryptText() {
 	cin >> plainText;
 	cout << "Enter the key for encryption: ";
 	cin >> key;
+	
 	for(int i=0; i<plainText.size(); i++) {
-		/**** Check f current character is upper case or lower case letter ****/
+		/**** Check if current character is upper case or lower case letter ****/
 		if(isupper(plainText[i])) {
 			cipherText += alphabetsUpperCase[(alphabetsUpperCase.find(plainText[i]) + key) % 26]; 
 		} else if(islower(plainText[i])) {
